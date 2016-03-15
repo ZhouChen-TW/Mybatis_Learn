@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.mybatis.lean.coreImp.IcardsRepository" >
+
+    <resultMap id="icardMapper" type="Icard">
+        <id property="icard_Id" column="icard_id" />
+        <result property="icardMsg" column="icardmsg"/>
+    </resultMap>
+
+    <select id="findAllIcard" resultMap="icardMapper">
+        select * from Icard
+    </select>
+
+    <select id="getIcardById" resultMap="icardMapper">
+        select * from Icard where Icard.icard_id = #{icard_Id}
+    </select>
+
+    <insert id="createIcard">
+        insert into Icard(icardmsg) select #{icardMsg} from dual where not exists (select * from Icard where Icard.icardmsg = #{icardMsg});
+    </insert>
+
+    <update id="updateIcard">
+        update Icard set Icard.icardmsg = #{icardMsg} where Icard.icard_id =#{icard_Id}
+    </update>
+
+    <delete id="deleteIcard">
+        delete from Icard where Icard.icard_id =#{icard_Id}
+    </delete>
+
+</mapper>

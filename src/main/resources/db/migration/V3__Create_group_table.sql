@@ -1,0 +1,6 @@
+create TABLE MyGroup(
+    GROUP_ID int not null AUTO_INCREMENT,
+    GROUPNAME VARCHAR(200),
+    PRIMARY KEY (GROUP_ID)
+);
+
