@@ -17,5 +17,5 @@ public interface ContactsRepository {
 
     void updateContact(Contact contact);//update
 
-    void deleteContactId(Contact contact);//delete
+    void deleteContact(Contact contact);//delete
 }

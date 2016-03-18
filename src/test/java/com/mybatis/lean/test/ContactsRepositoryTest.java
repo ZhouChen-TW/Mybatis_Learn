@@ -13,9 +13,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -58,7 +56,7 @@ public class ContactsRepositoryTest {
     @Test
     public void get_Contact_By_Id(){
         Contact contact = contactsRepository.getContactById(1);
-        assertThat(contact.getContact_Id(),is(1));
+        assertThat(contact.getId(),is(1));
         assertThat(contact.getType(),is("PHONE"));
         assertThat(contact.getValue(),is("13512345678"));
     }
@@ -88,13 +86,11 @@ public class ContactsRepositoryTest {
     @Test
     public void delete_a_Contact_by_id(){
         Contact contact =contactsRepository.getContactById(1);
-        contactsRepository.deleteContactId(contact);
+        contactsRepository.deleteContact(contact);
         List<Contact> contacts =contactsRepository.findAllContacts();
         assertThat(contacts.size(),is(2));
         assertThat(contacts.get(0).getValue(),is("13500000000"));
         assertThat(contacts.get(1).getValue(),is("13500000001"));
     }
-
-
 
 }

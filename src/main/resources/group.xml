@@ -6,11 +6,10 @@
 
 
 <mapper namespace="com.mybatis.lean.coreImp.GroupsRepository" >
-
     <resultMap id="groupMapper" type="Group">
-        <id property="group_Id" column="group_id" />
-        <result property="groupName" column="groupname" />
-        <collection  property="users" javaType="ArrayList" column="group_Id" ofType="User" select="selectUsersForGroup" >
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <collection  property="users" javaType="ArrayList" column="id" ofType="User" select="selectUsersForGroup" >
         </collection>
     </resultMap>
 
@@ -19,23 +18,27 @@
     </select>
 
     <select id="selectUsersForGroup" resultType="User" >
-        select u.* from User u, User_Group ug where u.user_id = ug.user_id and ug.group_id = #{group_Id}
+        select u.* from User u, User_Group ug where u.id = ug.user_id and ug.group_id = #{id}
     </select>
 
     <select id="getGroupById" resultMap="groupMapper">
-        select * from MyGroup where MyGroup.group_id =#{group_Id}
+        select * from MyGroup where MyGroup.id =#{group_Id}
     </select>
 
     <insert id="createGroup">
-        insert into MyGroup(groupname) VALUES(#{groupName})
+        insert into MyGroup(name) VALUES(#{name})
     </insert>
 
     <update id="updateGroup">
-        update MyGroup set MyGroup.groupname = #{groupName} where MyGroup.group_id = #{group_Id}
+        update MyGroup set MyGroup.name = #{name} where MyGroup.id = #{id};
+        <foreach item="item"  collection="users">
+            update User set User.name=#{item.name} where User.id = #{item.id};
+        </foreach>
     </update>
 
     <delete id="deleteGroup">
-        delete from MyGroup where MyGroup.group_id = #{group_Id}
+        delete from User_Group where User_Group.group_id = #{id};
+        delete from MyGroup where MyGroup.id = #{id};
     </delete>
 
 </mapper>

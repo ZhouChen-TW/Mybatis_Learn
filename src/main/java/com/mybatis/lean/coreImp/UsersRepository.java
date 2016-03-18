@@ -13,22 +13,32 @@ public interface UsersRepository {
     //user:icard = 1:1
     void creatUser(User user);//insert
 
+    void createIcard(User user);//insert relation
+
     List<User> findAllUsers();//select
 
     User getUserById(Integer userId);//select
 
-    void updateUser(User user);//update  级联待处理
+    void updateIcard(User user);//update relation
 
-    void deleteUserById(User user);//delete 级联待处理
+    void updateUser(User user);//update  级联
+
+    void deleteUser(User user);//delete 级联
+
+    void deleteUserExpectException(User user);
 
     //user:contact=1:n
-    void createContact(Contact contact,User user);
+    void createContact(Contact contact,User user);//insert relation
 
-    List<Contact> selectContactsForUser(User user);
+    List<Contact> selectContactsForUser(User user);//select relation
 
-    void updateContact(Contact contact,User user);
+    void updateContact(Contact contact,User user);//update relation
+
+    void updateAllContactsForUser(User user);//update Casede
 
     //user:group=n:n
+    void updateAllGroupsForUser(User user);//update Casede
+
     List<Group> selectGroupsForUser(User user);
 
     int selectRelations(User user,Group group);
@@ -36,9 +46,5 @@ public interface UsersRepository {
     void createRelations(User user,Group group);
 
     void deleteRelations(User user,Group group);
-
-
-
-
 
 }

@@ -8,7 +8,7 @@
 <mapper namespace="com.mybatis.lean.coreImp.ContactsRepository" >
 
     <resultMap id="contactMapper" type="Contact">
-        <id property="contact_Id" column="contact_id" />
+        <id property="id" column="id" />
         <result property="type" column="type" />
         <result property="value" column="value" />
     </resultMap>
@@ -18,7 +18,7 @@
     </select>
 
     <select id="getContactById" resultMap="contactMapper">
-        select * from Contact where Contact.contact_id =#{contact_Id}
+        select * from Contact where Contact.id =#{id}
     </select>
 
     <insert id="createContact">
@@ -26,11 +26,11 @@
     </insert>
 
     <update id="updateContact">
-        update Contact set Contact.type =#{type},Contact.value=#{value} where Contact.contact_id =#{contact_Id}
+        update Contact set Contact.type =#{type},Contact.value=#{value} where Contact.id =#{id}
     </update>
 
-    <delete id="deleteContactId">
-        delete from Contact where Contact.contact_id =#{contact_Id}
+    <delete id="deleteContact">
+        delete from Contact where Contact.id =#{id}
     </delete>
 
 </mapper>

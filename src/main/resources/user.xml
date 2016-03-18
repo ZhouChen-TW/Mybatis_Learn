@@ -7,17 +7,29 @@
 
 <mapper namespace="com.mybatis.lean.coreImp.UsersRepository" >
 
-    <resultMap id="icardMapper" type="Icard">
-        <id property="icard_Id" column="icard_id" />
-        <result property="icardMsg" column="icardmsg"/>
-    </resultMap>
+    <!--<resultMap id="icardMapper" type="Icard">-->
+        <!--<id property="id" column="id" />-->
+        <!--<result property="icardMsg" column="icardmsg"/>-->
+    <!--</resultMap>-->
+
+    <!--<resultMap id="contactMapper" type="Contact">-->
+        <!--<id property="id" column="id" />-->
+        <!--<result property="type" column="type" />-->
+        <!--<result property="value" column="value" />-->
+    <!--</resultMap>-->
+
+    <!--<resultMap id="groupMapper" type="Group">-->
+        <!--<id property="id" column="id" />-->
+        <!--<result property="groupName" column="groupname" />-->
+    <!--</resultMap>-->
+
     <resultMap id="userMapper" type="User">
-        <id property="user_Id" column="user_id" />
-        <result property="userName" column="username" />
-        <association property="icard" column="icard_id"  select="selectIcardForUser" ></association>
-        <collection  property="contacts" javaType="ArrayList" column="user_Id" ofType="Contact" select="selectContactsForUser" >
+        <id property="id" column="id" />
+        <result property="name" column="name" />
+        <association property="icard" column="id"  javaType="Icard" select="selectIcardForUser" ></association>
+        <collection  property="contacts" javaType="ArrayList"  column="id" ofType="Contact" select="selectContactsForUser" >
         </collection>
-        <collection  property="groups" javaType="ArrayList" column="user_Id" ofType="Group" select="selectGroupsForUser" >
+        <collection  property="groups" javaType="ArrayList" column="id" ofType="Group" select="selectGroupsForUser" >
         </collection>
     </resultMap>
 
@@ -25,52 +37,81 @@
         select * from User
     </select>
 
-    <select id="selectIcardForUser" resultMap="icardMapper">
-        select * from Icard where Icard.icard_id =#{icard_id}
+    <select id="selectIcardForUser" resultType="Icard">
+        select * from Icard where Icard.user_id =#{id}
     </select>
 
     <select id="getUserById" resultMap="userMapper">
-        select * from User where User.user_id = #{user_Id}
+        select * from User where User.id = #{id}
     </select>
 
     <select id="selectContactsForUser" resultType="Contact">
-        select * from Contact where Contact.user_id =#{user_Id}
+        select * from Contact where Contact.user_id =#{id}
     </select>
     
     <select id="selectGroupsForUser" resultType="Group">
-        select g.* from MyGroup g, User_Group ug where g.group_id = ug.group_id and ug.user_id = #{user_Id}
+        select g.* from MyGroup g, User_Group ug where g.id = ug.group_id and ug.user_id = #{id}
     </select>
 
     <select id="selectRelations" resultType="int">
-        select  count(*) from User_Group where User_Group.user_id=#{0.user_Id} and User_Group.group_id=#{1.group_Id}
+        select  count(*) from User_Group where User_Group.user_id=#{0.id} and User_Group.group_id=#{1.id}
     </select>
 
     <insert id="creatUser" >
-        insert into User(username,icard_id) VALUES (#{userName},#{icard.icard_Id});
+        insert into User(id,name) VALUES (#{id},#{name});
+    </insert>
+
+    <insert id="createIcard">
+        insert into Icard(icardmsg,user_id) VALUES (#{icard.icardMsg},#{id})
     </insert>
 
     <insert id="createContact">
-        insert into Contact (type,value,user_id) VALUES(#{0.type},#{0.value},#{1.user_Id});
+        insert into Contact (type,value,user_id) VALUES(#{0.type},#{0.value},#{1.id})
     </insert>
 
     <insert id="createRelations">
-        insert into User_Group (user_id,group_id) VALUES (#{0.user_Id},#{1.group_Id})
+        insert into User_Group (user_id,group_id) VALUES (#{0.id},#{1.id})
     </insert>
 
     <update id="updateUser">
-        update User set User.username = #{userName},User.icard_id =#{icard.icard_Id}
+        update User set User.name = #{name} where User.id =#{id}
+    </update>
+
+    <update id="updateIcard">
+        update Icard set Icard.icardmsg =#{icard.icardMsg},Icard.user_id = #{id} where Icard.id =#{icard.id}
     </update>
 
     <update id="updateContact">
-        update Contact set Contact.type =#{0.type},Contact.value=#{0.value},Contact.user_id =#{1.user_Id}
+        update User set User.name = #{1.name} where User.id =#{1.id};
+        update Contact set Contact.type =#{0.type},Contact.value=#{0.value},Contact.user_id =#{1.id} where Contact.id =#{0.id}
     </update>
 
-    <delete id="deleteUserById">
-        delete from User where User.user_id =#{user_Id}
+    <update id="updateAllContactsForUser">
+        update User set User.name = #{name} where User.id =#{id};
+        <foreach item="item"  collection="contacts">
+            update Contact set Contact.type=#{item.type},Contact.value=#{item.value} where Contact.id = #{item.id};
+        </foreach>
+    </update>
+
+    <update id="updateAllGroupsForUser">
+        update User set User.name = #{name} where User.id =#{id};
+        <foreach item="item"  collection="groups">
+            update MyGroup set MyGroup.name=#{item.name} where MyGroup.id = #{item.id};
+        </foreach>
+    </update>
+    <delete id="deleteUser">
+        delete from Icard where Icard.user_id = #{id};
+        delete from Contact where Contact.user_id =#{id};
+        delete from User_Group where User_Group.user_id =#{id};
+        delete from User where User.id =#{id};
+    </delete>
+
+    <delete id="deleteUserExpectException">
+        delete from User where User.id =#{id};
     </delete>
 
     <delete id="deleteRelations">
-         delete from User_Group where User_Group.user_id=#{0.user_Id} and User_Group.group_id=#{1.group_Id}
+         delete from User_Group where User_Group.user_id=#{0.id} and User_Group.group_id=#{1.id}
     </delete>
 
 

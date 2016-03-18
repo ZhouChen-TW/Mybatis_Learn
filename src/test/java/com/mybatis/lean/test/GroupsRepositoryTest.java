@@ -3,6 +3,7 @@ package com.mybatis.lean.test;
 import com.mybatis.lean.core.Group;
 import com.mybatis.lean.core.User;
 import com.mybatis.lean.coreImp.GroupsRepository;
+import com.mybatis.lean.coreImp.UsersRepository;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -14,12 +15,9 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.Is.is;;
 import static org.junit.Assert.assertThat;
 
 public class GroupsRepositoryTest {
@@ -52,23 +50,24 @@ public class GroupsRepositoryTest {
     public void find_All_Groups(){
         List<Group> groups =groupsRepository.findAllGroups();
         assertThat(groups.size(),is(2));
-        assertThat(groups.get(0).getGroupName(),is("小组1"));
-        assertThat(groups.get(1).getGroupName(),is("小组2"));
+        assertThat(groups.get(0).getName(),is("小组1"));
+        assertThat(groups.get(1).getName(),is("小组2"));
     }
 
     @Test
     public void select_Users_For_Group(){
         Group group =groupsRepository.getGroupById(1);
         List<User> users =groupsRepository.selectUsersForGroup(group);
-        assertThat(users.size(),is(1));
-        assertThat(users.get(0).getUserName(),is("Jerry"));
+        assertThat(users.size(),is(2));
+        assertThat(users.get(0).getName(),is("Jerry"));
+        assertThat(users.get(1).getName(),is("Tom"));
     }
 
     @Test
     public void get_Group_By_Id(){
         Group group =groupsRepository.getGroupById(1);
-        assertThat(group.getGroup_Id(),is(1));
-        assertThat(group.getGroupName(),is("小组1"));
+        assertThat(group.getId(),is(1));
+        assertThat(group.getName(),is("小组1"));
     }
 
     @Test
@@ -77,29 +76,36 @@ public class GroupsRepositoryTest {
         groupsRepository.createGroup(group);
         List<Group> groups =groupsRepository.findAllGroups();
         assertThat(groups.size(),is(3));
-        assertThat(groups.get(0).getGroupName(),is("小组1"));
-        assertThat(groups.get(1).getGroupName(),is("小组2"));
-        assertThat(groups.get(2).getGroupName(),is("小组3"));
+        assertThat(groups.get(0).getName(),is("小组1"));
+        assertThat(groups.get(1).getName(),is("小组2"));
+        assertThat(groups.get(2).getName(),is("小组3"));
     }
 
     @Test
-    public void update_Group(){
+    public void update_Group_Casede(){
         Group group =groupsRepository.getGroupById(1);
-        group.setGroupName("小组3");
+        group.setName("小组3");
+        List<User> users =group.getUsers();
+        users.get(0).setName("one");
+        users.get(1).setName("two");
         groupsRepository.updateGroup(group);
         Group thegroup =groupsRepository.getGroupById(1);
-        assertThat(thegroup.getGroup_Id(),is(1));
-        assertThat(thegroup.getGroupName(),is("小组3"));
+        assertThat(thegroup.getId(),is(1));
+        assertThat(thegroup.getName(),is("小组3"));
+        List<User> theUser = thegroup.getUsers();
+        assertThat(theUser.get(0).getName(),is("one"));
+        assertThat(theUser.get(1).getName(),is("two"));
     }
 
     @Test
-    public void delete_Group(){
+    public void delete_Group_Casede(){
         Group group =groupsRepository.getGroupById(1);
         groupsRepository.deleteGroup(group);
         List<Group> groups =groupsRepository.findAllGroups();
         assertThat(groups.size(),is(1));
-        assertThat(groups.get(0).getGroupName(),is("小组2"));
-
+        assertThat(groups.get(0).getName(),is("小组2"));
+        List<User> users =groupsRepository.selectUsersForGroup(group);
+        assertThat(users.size(),is(0));
     }
 
 }

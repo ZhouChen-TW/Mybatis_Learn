@@ -6,34 +6,34 @@ import java.util.List;
  * Created by zoe on 3/15/16.
  */
 public class User {
-    private Integer user_Id;
-    private String userName;
+    private Integer id;
+    private String name;
     private Icard icard;
     private List<Contact> contacts;
     private List<Group> groups;
 
     public User(){}
 
-    public User(Integer user_Id,String userName,Icard icard){
-        this.user_Id=user_Id;
-        this.userName =userName;
+    public User(Integer id,String name,Icard icard){
+        this.id=id;
+        this.name =name;
         this.icard=icard;
     }
 
-    public Integer getUser_Id() {
-        return user_Id;
+    public Integer getId() {
+        return id;
     }
 
-    public void setUser_Id(Integer user_Id) {
-        this.user_Id = user_Id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Icard getIcard() {

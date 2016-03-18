@@ -13,12 +13,12 @@ public interface GroupsRepository {
 
     List<Group> findAllGroups();//select
 
-    List<User> selectUsersForGroup(Group group);//select
+    List<User> selectUsersForGroup(Group group);//select relation
 
     Group getGroupById(Integer group_Id);//select
 
-    void updateGroup(Group group);//update 级联待处理
+    void updateGroup(Group group);//update 级联
 
-    void deleteGroup(Group group);//delete 级联待处理
+    void deleteGroup(Group group);//delete
 
 }

@@ -2,13 +2,17 @@ package com.mybatis.lean.test;
 
 import com.mybatis.lean.core.Icard;
 import com.mybatis.lean.coreImp.IcardsRepository;
+import com.sun.org.apache.xml.internal.serializer.utils.WrappedRuntimeException;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -44,28 +48,31 @@ public class IcardsRepositoryTest {
         
     }
 
+    @Rule
+    public ExpectedException thrown= ExpectedException.none();
+
     @Test
     public void find_All_Icard(){
         List<Icard> icards =icardsRepository.findAllIcard();
         assertThat(icards.size(),is(3));
         assertThat(icards.get(0).getIcardMsg(),is("23020419920820121X"));
         assertThat(icards.get(1).getIcardMsg(),is("230204199101232325"));
-        assertThat(icards.get(2).getIcardMsg(),is("10020319951012121x"));
+        assertThat(icards.get(2).getIcardMsg(),is("340301199010012223"));
     }
 
     @Test
     public void get_a_icard_by_id(){
         Icard icard =icardsRepository.getIcardById(1);
-        assertThat(icard.getIcard_Id(),is(1));
+        assertThat(icard.getId(),is(1));
         assertThat(icard.getIcardMsg(),is("23020419920820121X"));
     }
 
     @Test
     public void create_a_icard_when_is_not_exist(){
-        icardsRepository.createIcard(new Icard(4,"34030419691028121X"));
+        icardsRepository.createIcard(new Icard(3,"34030419691028121X"));
         List<Icard> icards = icardsRepository.findAllIcard();
-        assertThat(icards.size(),is(4));
-        assertThat(icards.get(3).getIcardMsg(),is("34030419691028121X"));
+        assertThat(icards.size(),is(3));
+        assertThat(icards.get(2).getIcardMsg(),is("34030419691028121X"));
     }
 
     @Test
@@ -82,6 +89,28 @@ public class IcardsRepositoryTest {
         icardsRepository.deleteIcard(icard);
         List<Icard> icards = icardsRepository.findAllIcard();
         assertThat(icards.size(),is(2));
+    }
+
+    //expect exceptions
+    @Test
+    public void primary_key_restrict_throws_PersistenceException(){
+        Icard icard =new Icard(1,"340301199010011314");
+        thrown.expect(PersistenceException.class);
+        icardsRepository.createIcard(icard);
+    }
+
+    @Test
+    public void unique_item_restrict_throws_PersistenceException(){
+        Icard icard =new Icard(4,"230204199101232325");
+        thrown.expect(PersistenceException.class);
+        icardsRepository.createIcard(icard);
+    }
+
+    @Test
+    public void primary_key_not_null_restrict_throws_PersistenceException(){
+        Icard icard =new Icard(null,"340301199010011314");
+        thrown.expect(PersistenceException.class);
+        icardsRepository.createIcard(icard);
     }
 
     

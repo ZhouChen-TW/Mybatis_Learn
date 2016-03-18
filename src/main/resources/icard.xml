@@ -8,7 +8,7 @@
 <mapper namespace="com.mybatis.lean.coreImp.IcardsRepository" >
 
     <resultMap id="icardMapper" type="Icard">
-        <id property="icard_Id" column="icard_id" />
+        <id property="id" column="id" />
         <result property="icardMsg" column="icardmsg"/>
     </resultMap>
 
@@ -17,19 +17,19 @@
     </select>
 
     <select id="getIcardById" resultMap="icardMapper">
-        select * from Icard where Icard.icard_id = #{icard_Id}
+        select * from Icard where Icard.id = #{id}
     </select>
 
     <insert id="createIcard">
-        insert into Icard(icardmsg) select #{icardMsg} from dual where not exists (select * from Icard where Icard.icardmsg = #{icardMsg});
+        insert into Icard(id,icardmsg) VALUES (#{id},#{icardMsg})
     </insert>
 
     <update id="updateIcard">
-        update Icard set Icard.icardmsg = #{icardMsg} where Icard.icard_id =#{icard_Id}
+        update Icard set Icard.icardmsg = #{icardMsg} where Icard.id =#{id}
     </update>
 
     <delete id="deleteIcard">
-        delete from Icard where Icard.icard_id =#{icard_Id}
+        delete from Icard where Icard.id =#{id}
     </delete>
 
 </mapper>

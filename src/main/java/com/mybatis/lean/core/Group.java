@@ -6,31 +6,31 @@ import java.util.List;
  * Created by zoe on 3/15/16.
  */
 public class Group {
-    private Integer group_Id;
-    private String groupName;
+    private Integer id;
+    private String name;
     private List<User> users;
 
     public Group(){}
 
-    public Group(Integer group_Id,String groupName){
-        this.group_Id =group_Id;
-        this.groupName = groupName;
+    public Group(Integer id,String name){
+        this.id =id;
+        this.name = name;
     }
 
-    public Integer getGroup_Id() {
-        return group_Id;
+    public Integer getId() {
+        return id;
     }
 
-    public void setGroup_Id(Integer group_Id) {
-        this.group_Id = group_Id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<User> getUsers() {

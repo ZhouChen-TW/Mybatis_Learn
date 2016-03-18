@@ -16,5 +16,5 @@ public interface IcardsRepository {
 
     void updateIcard(Icard icard);//update
 
-    void deleteIcard(Icard icard);
+    void deleteIcard(Icard icard);//delete
 }
